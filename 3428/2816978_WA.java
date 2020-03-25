@@ -1,0 +1,95 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+public class Main
+{
+    public static void main(String[] args) throws NumberFormatException,
+	    IOException
+    {
+	BufferedReader cin = new BufferedReader(
+		new InputStreamReader(System.in));
+	String format = cin.readLine();
+	List<String> ls = new ArrayList<String>();
+	while (true)
+	{
+	    String s = cin.readLine();
+	    if (s == null)
+		break;
+	    ls.add(s);
+	}
+	int argc = check(format);
+	if (argc == -1 || argc != ls.size())
+	{
+	    System.out.println("ERROR");
+	    return;
+	}
+	StringBuilder sb = new StringBuilder();
+	int j = 0;
+	for (int i = 0; i < format.length(); i++)
+	{
+	    char c = format.charAt(i);
+	    if (c == '%')
+	    {
+		i++;
+		char d = format.charAt(i);
+		if (d == 'd')
+		{
+		    try
+		    {
+			int pc=0,pq=0;
+			for(int k=0;k<ls.get(j).length();k++)
+			    if(ls.get(j).charAt(k)==' ')
+				pc++;
+			    else break;
+			for(int k=ls.get(j).length()-1;k>=0;k--)
+			    if(ls.get(j).charAt(k)==' ')
+				pq++;
+			    else break;
+			int v = Integer.parseInt(ls.get(j));
+			while(pc-->0)sb.append(' ');
+			sb.append("" + v);
+			while(pq-->0)sb.append(' ');
+		    }
+		    catch (Exception e)
+		    {
+			System.out.println("ERROR");
+			return;
+		    }
+		}
+		if (d == 's')
+		    sb.append(ls.get(j));
+		if (d == '%')
+		    sb.append(d);
+		if (d != '%')
+		    j++;
+	    }
+	    else
+		sb.append(c);
+	}
+	System.out.println(sb);
+    }
+    public static int check(String format)
+    {
+	int cnt = 0;
+	for (int i = 0; i < format.length(); i++)
+	{
+	    char c = format.charAt(i);
+	    if (c == '%')
+	    {
+		if (i + 1 >= format.length())
+		    return -1;
+		i++;
+		char n = format.charAt(i);
+		if (n == '%' || n == 's' || n == 'd')
+		    ;
+		else
+		    return -1;
+		if (n != '%')
+		    cnt++;
+	    }
+	}
+	return cnt;
+    }
+}
